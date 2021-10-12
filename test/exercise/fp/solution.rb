@@ -4,31 +4,24 @@ module Exercise
       # Обратиться к параметрам фильма можно так:
       # film["name"], film["rating_kinopoisk"], film["rating_imdb"],
       # film["genres"], film["year"], film["access_level"], film["country"]
+      NAME = 'name'.freeze
+      COUNTRY = 'country'.freeze
+      RATING = 'rating_kinopoisk'.freeze
+      SYMBOL = 'и'.freeze
+
       def rating(array)
-        country = 'country'
-        rating = 'rating_kinopoisk'
-        rating_array = array.reject { |film| film[country].nil? }.select { |film| film[country].include?(',') }.reject { |film| film[rating].nil? }.map { |film| film[rating].to_f }.select { |value| value > 0.0 }
-
-        iter = lambda do |index, acc|
-          return (acc / rating_array.size) if index > rating_array.size - 1
-
-          iter.call(index + 1, acc + rating_array[index])
+        rating_array = array.select do |film|
+          !film[COUNTRY].nil? &&
+            film[COUNTRY].include?(',') &&
+            !film[RATING].nil? &&
+            film[RATING].to_f > 0.0
         end
-        iter.call(0, 0.0)
+
+        rating_array.map { |element| element[RATING].to_f }.reduce(:+) / rating_array.size
       end
 
       def chars_count(films, threshold)
-        rating = 'rating_kinopoisk'
-        name = 'name'
-
-        filtered_array = films.reject { |film| film[rating].nil? }.select { |film| film[rating].to_f >= threshold }
-
-        iter = lambda do |index, acc|
-          return acc if index > filtered_array.size - 1
-
-          iter.call(index + 1, acc + filtered_array[index][name].count('и'))
-        end
-        iter.call(0, 0)
+        films.map { |element| element[RATING].to_f >= threshold ? element[NAME].count(SYMBOL) : 0 }.reduce(:+)
       end
     end
   end
