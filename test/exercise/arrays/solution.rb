@@ -3,48 +3,30 @@ module Exercise
     class << self
       def replace(array)
         max_value = find_biggest(array)
-
-        iter = lambda do |index|
-          array[index] = max_value if array[index] >= 0
-          return array if index == array.size - 1
-
-          iter.call(index + 1)
-        end
-
-        iter.call(0)
+        array.map { |element| element >= 0 ? max_value : element }
       end
 
       def find_biggest(array)
-        iter = lambda do |index, current_max|
-          current_max = array[index] if array[index] > current_max
-          return current_max if index == array.size - 1
-
-          iter.call(index + 1, current_max)
-        end
-        iter.call(0, 0)
+        max = array[0]
+        array.each { |element| max = element if element > max }
+        max
       end
 
       def search(array, query)
-        iter = lambda do |min, max|
-          return -1 unless min <= max
+        binary_search(array, query, 0, array.size - 1)
+      end
 
-          mid = (min + max) / 2
+      def binary_search(array, query, min, max)
+        return -1 unless min <= max
 
-          index = mid if query == array[mid]
-
-          if query == array[mid]
-            index = mid
-          elsif query > array[mid]
-            min = mid + 1
-          else
-            max = mid - 1
-          end
-
-          return index if query == array[mid]
-
-          iter.call(min, max)
+        mid = (min + max) / 2
+        if query == array[mid]
+          mid
+        elsif query > array[mid]
+          binary_search(array, query, mid + 1, max)
+        else
+          binary_search(array, query, min, mid - 1)
         end
-        iter.call(0, array.size - 1)
       end
     end
   end
