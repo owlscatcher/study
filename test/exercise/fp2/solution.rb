@@ -5,10 +5,14 @@ module Exercise
       # Использовать свои написанные функции для реализации следующих - можно.
 
       # Написать свою функцию my_each
-      def my_each
-        for element in self
-          yield element
-        end
+      def my_each(&block)
+        return if empty?
+
+        first, *rest = self
+        yield first
+        MyArray.new(rest).my_each(&block)
+
+        self
       end
 
       # Написать свою функцию my_map
