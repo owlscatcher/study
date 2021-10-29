@@ -17,11 +17,18 @@ module Exercise
             film[RATING].to_f > 0.0
         end
 
-        rating_array.map { |element| element[RATING].to_f }.reduce(:+) / rating_array.size
+        numeric_rating = rating_array.map { |el| el[RATING].to_f }
+        average_rating = numeric_rating.reduce(:+) / numeric_rating.size
+
+        average_rating
       end
 
       def chars_count(films, threshold)
-        films.map { |element| element[RATING].to_f >= threshold ? element[NAME].count(SYMBOL) : 0 }.reduce(:+)
+        films_in_threshold = films.select { |film| film[RATING].to_f >= threshold }
+        symbols_in_titles = films_in_threshold.map { |film| film[NAME].count(SYMBOL) }
+        summary = symbols_in_titles.reduce(:+)
+
+        summary
       end
     end
   end
