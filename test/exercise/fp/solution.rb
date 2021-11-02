@@ -11,9 +11,9 @@ module Exercise
 
       def rating(array)
         rating_array = array.select do |film|
-          !film[COUNTRY].nil? &&
+          film[COUNTRY].present? &&
             film[COUNTRY].include?(',') &&
-            !film[RATING].nil? &&
+            film[RATING].present? &&
             film[RATING].to_f > 0.0
         end
 
